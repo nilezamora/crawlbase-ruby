@@ -32,9 +32,35 @@ describe Crawlbase::API do
 
       expect(response.status_code).to eql(200)
       expect(response.original_status).to eql(200)
-      expect(response.pc_status).to eql(200)
+      expect(response.cb_status).to eql(200)
       expect(response.url).to eql('http://httpbin.org/anything?param1=x&params2=y')
       expect(response.body).to eql('body')
+    end
+
+    it 'prefers cb_status over pc_status from the response' do
+      stub_request(:get, 'https://api.crawlbase.com/?token=test&url=http%3A%2F%2Fhttpbin.org%2Fanything').
+        to_return(
+          body: 'body',
+          status: 200,
+          headers: { skip_normalize: true, 'original_status' => 200, 'cb_status' => 201, 'pc_status' => 200, 'url' => 'http://httpbin.org/anything'})
+
+      api = Crawlbase::API.new(token: 'test')
+      response = api.get('http://httpbin.org/anything')
+
+      expect(response.cb_status).to eql(201)
+    end
+
+    it 'keeps pc_status as a deprecated alias of cb_status' do
+      stub_request(:get, 'https://api.crawlbase.com/?token=test&url=http%3A%2F%2Fhttpbin.org%2Fanything').
+        to_return(
+          body: 'body',
+          status: 200,
+          headers: { skip_normalize: true, 'original_status' => 200, 'cb_status' => 200, 'url' => 'http://httpbin.org/anything'})
+
+      api = Crawlbase::API.new(token: 'test')
+      response = api.get('http://httpbin.org/anything')
+
+      expect { expect(response.pc_status).to eql(200) }.to output(/DEPRECATION.*pc_status.*cb_status/).to_stderr
     end
 
     it 'raises a timeout error' do
@@ -61,7 +87,7 @@ describe Crawlbase::API do
 
       expect(response.status_code).to eql(200)
       expect(response.original_status).to eql(200)
-      expect(response.pc_status).to eql(200)
+      expect(response.cb_status).to eql(200)
       expect(response.url).to eql('http://httpbin.org/anything?param1=x&params2=y')
       expect(response.body).to eql('body')
     end
@@ -80,7 +106,7 @@ describe Crawlbase::API do
 
       expect(response.status_code).to eql(200)
       expect(response.original_status).to eql(200)
-      expect(response.pc_status).to eql(200)
+      expect(response.cb_status).to eql(200)
       expect(response.url).to eql('http://httpbin.org/anything?param1=x&params2=y')
       expect(response.body).to eql('body')
     end

@@ -26,7 +26,7 @@ describe Crawlbase::ScreenshotsAPI do
 
       expect(response.status_code).to eql(200)
       expect(response.original_status).to eql(200)
-      expect(response.pc_status).to eql(200)
+      expect(response.cb_status).to eql(200)
       expect(response.url).to eql('http://httpbin.org/anything?param1=x&params2=y')
       expect(response.body).to eql('body')
       expect(response.screenshot_path).not_to be_empty
@@ -39,7 +39,7 @@ describe Crawlbase::ScreenshotsAPI do
 
       expect(response.status_code).to eql(200)
       expect(response.original_status).to eql(200)
-      expect(response.pc_status).to eql(200)
+      expect(response.cb_status).to eql(200)
       expect(response.url).to eql('http://httpbin.org/anything?param1=x&params2=y')
       expect(response.body).to eql('body')
       expect(response.screenshot_path).to eql(File.join(Dir.tmpdir, 'test-image.jpg'))
@@ -64,7 +64,7 @@ describe Crawlbase::ScreenshotsAPI do
   
       expect(response.status_code).to eql(200)
       expect(response.original_status).to eql(200)
-      expect(response.pc_status).to eql(200)
+      expect(response.cb_status).to eql(200)
       expect(response.url).to eql('http://httpbin.org/anything?param1=x&params2=y')
       expect(response.body).to eql('body')
       expect(response.screenshot_path).to eql(File.join(Dir.tmpdir, 'test-image.jpg'))

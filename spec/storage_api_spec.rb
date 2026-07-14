@@ -11,6 +11,7 @@ describe Crawlbase::StorageAPI do
       stub_request(:get, 'https://api.crawlbase.com/storage?format=html&rid=1&token=test')
         .to_return(
           status: 200,
+          headers: { skip_normalize: true, 'original_status' => 200, 'pc_status' => 200, 'url' => 'https://www.apple.com', 'rid' => '1', 'stored_at' => '2021-03-01T14:22:58+02:00' },
           body: {
             stored_at: '2021-03-01T14:22:58+02:00',
             original_status: 200,
@@ -40,6 +41,12 @@ describe Crawlbase::StorageAPI do
           body: '<html><head><title>Apple</title></head><body>Apple</body></html>'
         }.to_json
       )
+      expect(subject.cb_status).to eq(200)
+    end
+
+    it 'keeps pc_status as a deprecated alias of cb_status' do
+      subject.get('1')
+      expect { expect(subject.pc_status).to eq(200) }.to output(/DEPRECATION.*pc_status.*cb_status/).to_stderr
     end
   end
 
@@ -139,6 +146,7 @@ describe Crawlbase::StorageAPI do
           'https://www.espn.com'
         ]
       )
+      expect(subject.cb_status).to eq([200, 200, 200])
     end
   end
 

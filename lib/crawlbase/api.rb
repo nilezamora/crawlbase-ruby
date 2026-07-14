@@ -6,7 +6,7 @@ require 'uri'
 
 module Crawlbase
   class API
-    attr_reader :token, :body, :status_code, :original_status, :pc_status, :url, :storage_url, :timeout
+    attr_reader :token, :body, :status_code, :original_status, :cb_status, :url, :storage_url, :timeout
 
     INVALID_TOKEN = 'Token is required'
     INVALID_URL = 'URL is required'
@@ -55,6 +55,11 @@ module Crawlbase
       self
     end
 
+    def pc_status
+      warn '[DEPRECATION] Crawlbase::API#pc_status is deprecated and will be removed in a future major release. Use #cb_status instead.', uplevel: 1
+      @cb_status
+    end
+
     private
 
     def build_http(uri)
@@ -80,7 +85,7 @@ module Crawlbase
       res = format == 'json' || base_url.include?('/scraper') ? JSON.parse(response.body) : response
 
       @original_status = res['original_status'].to_i
-      @pc_status = res['pc_status'].to_i
+      @cb_status = (res['cb_status'] || res['pc_status']).to_i
       @url = res['url']
       @storage_url = res['storage_url']
       @status_code = response.code.to_i

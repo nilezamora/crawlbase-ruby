@@ -56,7 +56,7 @@ begin
   response = api.get('https://www.facebook.com/britneyspears')
   puts response.status_code
   puts response.original_status
-  puts response.pc_status
+  puts response.cb_status
   puts response.body
 rescue => exception
   puts exception.backtrace
@@ -133,7 +133,7 @@ You can always get the original status and crawlbase status from the response. R
 response = api.get('https://sfbay.craigslist.org/')
 
 puts response.original_status
-puts response.pc_status
+puts response.cb_status
 ```
 
 ## Scraper API usage
@@ -254,7 +254,7 @@ Pass the [url](https://crawlbase.com/docs/storage-api/parameters/#url) that you 
 begin
   response = storage_api.get('https://www.apple.com')
   puts response.original_status
-  puts response.pc_status
+  puts response.cb_status
   puts response.url
   puts response.status_code
   puts response.rid
@@ -271,7 +271,7 @@ or you can use the [RID](https://crawlbase.com/docs/storage-api/parameters/#rid)
 begin
   response = storage_api.get(RID)
   puts response.original_status
-  puts response.pc_status
+  puts response.cb_status
   puts response.url
   puts response.status_code
   puts response.rid
@@ -304,7 +304,7 @@ To do a bulk request with a list of RIDs, please send the list of rids as an arr
 begin
   response = storage_api.bulk([RID1, RID2, RID3, ...])
   puts response.original_status
-  puts response.pc_status
+  puts response.cb_status
   puts response.url
   puts response.status_code
   puts response.rid
